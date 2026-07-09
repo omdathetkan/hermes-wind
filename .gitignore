@@ -1,0 +1,7 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Local probe scripts
+_probe.py
