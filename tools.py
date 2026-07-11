@@ -41,12 +41,15 @@ def check_wind_available() -> bool:
     return True
 
 
-def check_chart_available() -> bool:
+def _require_matplotlib() -> str | None:
     try:
         import matplotlib  # noqa: F401
-        return True
+        return None
     except ImportError:
-        return False
+        return (
+            "matplotlib is not installed in the Hermes Python environment. "
+            "Install it with: pip install matplotlib"
+        )
 
 
 # ----------------------------------------------------------------- helpers
@@ -382,6 +385,10 @@ def handle_wind_search_spots(args: dict, **_) -> str:
 
 
 def handle_wind_chart_spot(args: dict, **_) -> str:
+    missing = _require_matplotlib()
+    if missing:
+        return json.dumps({"error": missing})
+
     try:
         from .chart import render_wind_chart
     except ImportError:

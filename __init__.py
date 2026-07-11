@@ -13,7 +13,6 @@ def register(ctx):
         WIND_SEARCH_SPOTS_SCHEMA,
     )
     from .tools import (
-        check_chart_available,
         check_wind_available,
         handle_wind_chart_spot,
         handle_wind_check_spot,
@@ -52,8 +51,7 @@ def register(ctx):
         name="wind_chart_spot",
         schema=WIND_CHART_SPOT_SCHEMA,
         handler=lambda a, **k: handle_wind_chart_spot(a, **k),
-        check_fn=check_chart_available,
-        toolset="wind",
+        **_kw,
     )
 
     logger.info("hermes-wind loaded (5 tools, default spot: Oostvoorne)")
