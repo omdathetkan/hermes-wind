@@ -1,5 +1,5 @@
 name: hermes-wind
-version: "1.1.1"
+version: "1.2"
 description: >-
   Monitor kitesurf wind conditions via actuelewind.nl. Use wind_check_spot for
   periodic cron monitoring of Oostvoorne (default) — returns wind, water temp,
