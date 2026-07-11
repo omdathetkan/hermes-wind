@@ -38,10 +38,11 @@ def _load_module(name):
 
 
 _register_package()
-for _m in ("client", "schemas", "tools"):
+for _m in ("client", "schemas", "tools", "chart"):
     _load_module(_m)
 
 from hermes_wind.tools import (
+    handle_wind_chart_spot,
     handle_wind_check_spot,
     handle_wind_get_forecast,
     handle_wind_list_spots,
@@ -77,5 +78,8 @@ if __name__ == "__main__":
 
     _section("List spots matching 'voorn'")
     _pretty(handle_wind_list_spots({"query": "voorn", "limit": 5}))
+
+    _section("Wind chart (default Oostvoorne)")
+    _pretty(handle_wind_chart_spot({}))
 
     print("\n✓ All tests completed.")

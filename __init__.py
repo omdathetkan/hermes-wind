@@ -6,13 +6,16 @@ logger = logging.getLogger(__name__)
 
 def register(ctx):
     from .schemas import (
+        WIND_CHART_SPOT_SCHEMA,
         WIND_CHECK_SPOT_SCHEMA,
         WIND_GET_FORECAST_SCHEMA,
         WIND_LIST_SPOTS_SCHEMA,
         WIND_SEARCH_SPOTS_SCHEMA,
     )
     from .tools import (
+        check_chart_available,
         check_wind_available,
+        handle_wind_chart_spot,
         handle_wind_check_spot,
         handle_wind_get_forecast,
         handle_wind_list_spots,
@@ -45,5 +48,12 @@ def register(ctx):
         handler=lambda a, **k: handle_wind_list_spots(a, **k),
         **_kw,
     )
+    ctx.register_tool(
+        name="wind_chart_spot",
+        schema=WIND_CHART_SPOT_SCHEMA,
+        handler=lambda a, **k: handle_wind_chart_spot(a, **k),
+        check_fn=check_chart_available,
+        toolset="wind",
+    )
 
-    logger.info("hermes-wind loaded (4 tools, default spot: Oostvoorne)")
+    logger.info("hermes-wind loaded (5 tools, default spot: Oostvoorne)")

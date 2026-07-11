@@ -80,6 +80,22 @@ WIND_SEARCH_SPOTS_SCHEMA = {
     },
 }
 
+WIND_CHART_SPOT_SCHEMA = {
+    "name": "wind_chart_spot",
+    "description": (
+        "Generate a wind+tide chart PNG for a kitesurf spot. Returns chart_path "
+        "suitable for Signal delivery via send_message with MEDIA:<chart_path> in "
+        "the message text. Defaults to Oostvoorne. Requires matplotlib."
+    ),
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "spot": _SPOT,
+        },
+        "required": [],
+    },
+}
+
 WIND_LIST_SPOTS_SCHEMA = {
     "name": "wind_list_spots",
     "description": (

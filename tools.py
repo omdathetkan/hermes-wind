@@ -41,6 +41,14 @@ def check_wind_available() -> bool:
     return True
 
 
+def check_chart_available() -> bool:
+    try:
+        import matplotlib  # noqa: F401
+        return True
+    except ImportError:
+        return False
+
+
 # ----------------------------------------------------------------- helpers
 
 def _ms_to_knots(ms: float | None) -> float | None:
@@ -370,6 +378,49 @@ def handle_wind_search_spots(args: dict, **_) -> str:
         }, ensure_ascii=False)
     except Exception as exc:
         logger.error("wind_search_spots: %s", exc)
+        return json.dumps({"error": str(exc)})
+
+
+def handle_wind_chart_spot(args: dict, **_) -> str:
+    try:
+        from .chart import render_wind_chart
+    except ImportError:
+        from chart import render_wind_chart
+
+    try:
+        spot_id, err = _resolve_spot_id(args)
+        if err:
+            return json.dumps(err)
+
+        client = get_client()
+        detail = client.get_spot_detail(spot_id)
+        meta = _spot_meta_from_detail(detail)
+        current = _current_wind(detail.get("winddata") or [])
+
+        payload = {
+            "spot": meta,
+            "current": current,
+            "winddata": detail.get("winddata"),
+            "observations": detail.get("observations"),
+            "forecast": detail.get("forecast"),
+            "tide": [
+                {
+                    "time": t.get("tijdstip"),
+                    "type": t.get("getij"),
+                    "hoogte": t.get("hoogte"),
+                }
+                for t in (detail.get("getij") or [])
+            ],
+        }
+        chart_path = render_wind_chart(payload)
+        return json.dumps({
+            "spot": meta,
+            "chart_path": chart_path,
+            "signal_message": f"MEDIA:{chart_path}",
+            "url": f"https://actuelewind.nl/spot/{spot_id}",
+        }, ensure_ascii=False)
+    except Exception as exc:
+        logger.error("wind_chart_spot: %s", exc)
         return json.dumps({"error": str(exc)})
 
 

@@ -1,10 +1,14 @@
 name: hermes-wind
-version: "1.0"
+version: "1.1"
 description: >-
   Monitor kitesurf wind conditions via actuelewind.nl. Use wind_check_spot for
   periodic cron monitoring of Oostvoorne (default) — returns wind, water temp,
   waves, sunrise/sunset, tide, and a kitesurf session verdict. Use
-  wind_get_forecast for multi-day outlook and wind_search_spots to find other spots.
+  wind_chart_spot to generate a wind+tide PNG, then send_message with
+  MEDIA:<chart_path> to deliver it on Signal. Use wind_get_forecast for multi-day
+  outlook and wind_search_spots to find other spots.
 requires_env:
   - name: WIND_DEFAULT_SPOT
     description: "Default spot name or ID (default: Oostvoorne / 9983)"
+lazy_deps:
+  - matplotlib
